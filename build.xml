@@ -1,51 +1,63 @@
 <project name="FPS" basedir="." default="main">
 
-    <property name="src.dir"     value="src/com/FPS"/>
+	<property name="src.dir"     value="src"/>
 
-    <property name="build.dir"   value="build1"/>
-    <property name="classes.dir" value="${build.dir}/classes"/>
-    <property name="jar.dir"     value="${build.dir}/jar"/>
+	<property name="build.dir"   value="build1"/>
+	<property name="reports.tests"   value="reportsTest"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="jar.dir"     value="${build.dir}/jar"/>
 	<property name="lib.dir"     value="lib"/>
 	<property name="main-class"  value="com.FPS.ProcessingSystemThreadingMain"/>
-	    <path id="classpath">
-	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
-	    </path>
-	 <path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
-    
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</path>
+	<path id="application" location="${jar.dir}/${ant.project.name}.jar"/>
 
-    <target name="clean">
-        <delete dir="${build.dir}"/>
-    </target>
 
-    <target name="compile">
-        <mkdir dir="${classes.dir}"/>
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
-    </target>
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+		<delete dir="${classes.dir}"/>
+		<delete dir="${reports.tests}"/>
+	</target>
 
-    <target name="jar" depends="compile">
-        <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-            <manifest>
-                <attribute name="Main-Class" value="${main-class}"/>
-            </manifest>
-        </jar>
-    </target>    
-	
-	<target name="junit" depends="jar">
-	        <junit printsummary="yes">
-	            <classpath>
-	                <path refid="classpath"/>
-	                <path refid="application"/>
-	            </classpath>
-	        	<classpath location="." />
-	            <batchtest fork="yes">
-	                <fileset dir="${src.dir}" includes="*Test.java"/>
-	            </batchtest>
-	        </junit>
-	    </target>
+	<target name="compile">
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${reports.tests}"/>
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+	</target>
 
-    <target name="clean-build" depends="jar"/>
+	<target name="jar" depends="compile">
+		<mkdir dir="${jar.dir}"/>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="${main-class}"/>
+			</manifest>
+		</jar>
+	</target>
 
-    <target name="main" depends="clean,jar,junit"/>
+
+	<target name="junit2" depends="jar">
+
+		<junit printsummary="yes" haltonfailure="yes">
+
+			<classpath>
+				<pathelement path="${classes.dir}"/>
+			</classpath>
+
+			<formatter type="plain"/>
+
+			<batchtest fork="yes" todir="${reports.tests}">
+				<fileset dir="${src.dir}">
+					<include name="**/*Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+
+	</target>
+
+
+	<target name="clean-build" depends="jar"/>
+
+	<target name="main" depends="clean,junit2"/>
 
 </project>
