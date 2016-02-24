@@ -2,7 +2,7 @@ package com.FPS;
 
 public interface Constants {
 	public final String SUCCESS = "success";
-	public final String DIRECTORY = "F:\\InterviewProject";
+	public final String DIRECTORY = "F:\\Project";
 	public final int THREADS = 20;
 	public final String FAIL = "fail";
 	public final String DATE_FORMAT = "yyyy-MM-dd";
